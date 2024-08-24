@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ summary.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'brief_summary' %}">Brief Summary</a></li>
+                <li><a href="{% url 'skills' %}">Skills</a></li>
+                <li><a href="{% url 'completed_projects' %}">Completed Projects</a></li>
+                <li><a href="{% url 'ongoing_projects' %}">Ongoing Projects</a></li>
+            </ul>
+        </nav>
+        <!-- <button id="theme-toggle">Switch Theme</button> -->
+    </header>
+    <main>
+        <h2>{{ summary.title }}</h2>
+        <p>{{ summary.content }}</p>
+
+        <!-- Contact form section -->
+        <section id="contact-form">
+            <h3>Contact Me</h3>
+            <form method="POST" action="{% url 'contact' %}">
+                {% csrf_token %}
+                {{ contact_form.as_p }}
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 My Portfolio</p>
+    </footer>
+</body>
+</html>

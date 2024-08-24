@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Existing styles here */
+
+        /* Styles for ETL Process Animation with Gears */
+        #etl-process {
+            margin: 2em 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .etl-step-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .etl-step {
+            display: inline-block;
+            padding: 1em;
+            border: 2px solid #00796b;
+            border-radius: 8px;
+            width: 200px;
+            height: 100px;
+            font-size: 1.2em;
+            color: #00796b;
+            background-color: #e0f7fa;
+            position: relative;
+            z-index: 1;
+        }
+
+        .gear-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .gear {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #00796b;
+            border-radius: 50%;
+            position: absolute;
+            animation: rotate 2s linear infinite;
+            border-top-color: transparent;
+        }
+
+        .gear:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #00796b;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .gear:nth-child(2) {
+            border-color: transparent;
+            border-width: 5px 5px 5px 5px;
+            border-top-color: #00796b;
+            animation-duration: 1.5s;
+        }
+
+        .gear:nth-child(3) {
+            border-color: transparent;
+            border-width: 5px 5px 5px 5px;
+            border-top-color: #00796b;
+            animation-duration: 2.5s;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Styles for Jokes Generator */
+        #jokes-generator {
+            margin: 2em 0;
+            text-align: center;
+        }
+
+        .joke {
+            font-size: 1.2em;
+            color: #00796b;
+            background-color: #e0f7fa;
+            padding: 1em;
+            border-radius: 8px;
+            border: 2px solid #00796b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .joke button {
+            background-color: #00796b;
+            color: #ffffff;
+            border: none;
+            padding: 0.5em 1em;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .joke button:hover {
+            background-color: #004d40;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'brief_summary' %}">Brief Summary</a></li>
+                <li><a href="{% url 'skills' %}">Skills</a></li>
+                <li><a href="{% url 'completed_projects' %}">Completed Projects</a></li>
+                <li><a href="{% url 'ongoing_projects' %}">Ongoing Projects</a></li>
+            </ul>
+        </nav>
+        <!-- Add your image here -->
+        <div class="profile-image">
+            <img src="{% static 'images/my_image.jpg' %}" alt="My Profile Image">
+        </div>
+    </header>
+    <main>
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="project-list">
+                {% for project in projects %}
+                    <div class="project-card">
+                        <a href="{% url 'project_detail' project.id %}">
+                            {% if project.image_url %}
+                                <img src="{% static project.image_url %}" alt="{{ project.title }}">
+                            {% endif %}
+                            <div class="project-info">
+                                <h3>{{ project.title }}</h3>
+                                <p>{{ project.description|truncatewords:20 }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p>No projects available.</p>
+                {% endfor %}
+            </div>
+        </section>
+        <!-- ETL Process Animation -->
+        <section id="etl-process">
+            <h2>ETL Process</h2>
+            <div class="etl-step-container">
+                <div class="etl-step">Apache Airflow</div>
+                <div class="gear-container">
+                    <div class="gear"></div>
+                    <div class="gear"></div>
+                    <div class="gear"></div>
+                </div>
+                <div class="etl-step">MS SQL Server</div>
+                <div class="gear-container">
+                    <div class="gear"></div>
+                    <div class="gear"></div>
+                </div>
+                <div class="etl-step">Transformations</div>
+                <div class="gear-container">
+                    <div class="gear"></div>
+                </div>
+                <div class="etl-step">Data Warehouse</div>
+                <div class="gear-container">
+                    <div class="gear"></div>
+                </div>
+                <div class="etl-step">Power BI</div>
+            </div>
+        </section>
+        <!-- Contact Form -->
+        <section id="contact-form-section">
+            <h2>Contact Me</h2>
+            <form method="post" action="{% url 'contact' %}">
+                {% csrf_token %}
+                {{ contact_form.as_p }}
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.impact-count');
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-count');
+                    const count = +counter.innerText;
+                    const increment = target / 200; // Adjust the speed of counting
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + increment);
+                        setTimeout(updateCount, 1); // Adjust the delay for smoother animation
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+
+                updateCount();
+            });
+        });
+    </script>
+</body>
+</html>
+
+        <!-- Section for successful companies count -->
+        <section id="impact">
+            <h2>Impact</h2>
+            <div class="impact-info">
+                <p class="impact-count" data-count="{{ successful_companies_count }}">0</p>
+                <p class="impact-description">successful companies impacted</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 My Portfolio. All rights reserved.</p>
+        <div class="social-media">
+            <a href="https://twitter.com/your_handle" target="_blank">
+                <img src="{% static 'images/Twitter_Logo.png' %}" alt="Twitter">
+            </a>
+            <a href="https://www.linkedin.com/in/cheruiyot-mike/" target="_blank">
+                <img src="{% static 'images/LI-Logo.svg.original.svg' %}" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/kimutai-debug" target="_blank">
+                <img src="{% static 'images/github-icon.png' %}" alt="GitHub">
+            </a>
+            <a href="https://www.youtube.com/channel/UCKWhBKwQjdGBYXEGUryMJmQ" target="_blank">
+                <img src="{% static 'images/YT.jpg' %}" alt="YouTube">
+            </a>
+            <a href="https://github.com/kimutai-debug" target="_blank">
+                <img src="{% static 'images/FB.png' %}" alt="Facebook">
+            </a>
+            <!-- Add more social media links as needed -->
+        </div>
+        
